@@ -20,6 +20,25 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 5000;
 
+//Middleware. Revisar en el aula, o que los demas lo mire.
+function verifyToken(req, res, next) {
+ 
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; 
+
+  if (token == null) return res.status(408).send('Request Timeout'); 
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+      if (err) return res.status(408).send('Request Timeout'); 
+
+      req.user = user; 
+      next(); 
+  });
+}
+
+// middleware a /api
+app.use('/api', verifyToken);
+
 /* Ruta Base -> Documentación */
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
