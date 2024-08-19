@@ -2,32 +2,44 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 
 exports.createItem = async (req, res) => {
-  /* 
-     #swagger.tags = ['Items']
-     #swagger.description = 'Create an item'
-     #swagger.summary = 'Create an item'
-     #swagger.parameters['data'] = {
-         in: 'body',
-         description: 'Data to create an item',
-         required: true,
-     }
-     #swagger.responses[201] = {
-         description: 'Item successfully created',
-     }
-     #swagger.responses[400] = {
-         description: 'Bad request',
-     }
-  */
-  try {
-    const data = req.body;
-    const itemRef = await db.collection('items').add(data);
-    res.status(201).send(`Created a new item: ${itemRef.id}`);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
+    /* 
+       #swagger.tags = ['Items']
+       #swagger.description = 'Create an item'
+       #swagger.summary = 'Create an item'
+       #swagger.parameters['data'] = {
+           in: 'body',
+           description: 'Data to create an item',
+           required: true,
+       }
+
+       #swagger.parameters['Token'] = {
+            name: 'Token',
+            in: 'header',
+            description: 'JWT token',
+            required: true
+       }
+
+       #swagger.responses[201] = {
+           description: 'Item successfully created',
+       }
+       #swagger.responses[400] = {
+           description: 'Bad request',
+       }
+
+       #swagger.responses[408] = {
+           description: 'Request Timeout',
+       }
+    */
+    try {
+        const data = req.body;
+        const itemRef = await db.collection('items').add(data);
+        res.status(201).send(`Created a new item: ${itemRef.id}`);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
 };
 
-exports.getItem = async (req, res) => { 
+exports.getItem = async (req, res) => {
     /* 
      #swagger.tags = ['Items']
      #swagger.description = 'Get an item entry'
@@ -36,6 +48,14 @@ exports.getItem = async (req, res) => {
          description: 'Item id',
          required: true,
      }
+         
+     #swagger.parameters['Token'] = {
+         name: 'Token',
+         in: 'header',
+         description: 'JWT token',
+         required: true
+     }
+
      #swagger.responses[404] = {
          description: 'Item not found',
      }
@@ -45,22 +65,58 @@ exports.getItem = async (req, res) => {
      #swagger.responses[200] = {
          description: 'Get an item by id',
      }
+
+     #swagger.responses[408] = {
+           description: 'Request Timeout',
+     }
    */
     try {
         const dataID = req.params.id;
         const itemRef = await db.collection('items').doc(dataID).get();
-        if (!itemRef.exists){
+        if (!itemRef.exists) {
             res.status(404).send("item not found")
         } else {
             res.status(200).json({ id: itemRef.id, ...itemRef.data() })
         }
 
-    } catch(error) {
+    } catch (error) {
         res.status(400).send(error.message);
     }
 }
 
-exports.updateItem = async (req, res) => { 
+exports.updateItem = async (req, res) => {
+    /* 
+           #swagger.tags = ['Items']
+           #swagger.description = ''
+           #swagger.summary = ''
+           #swagger.parameters['id'] = {
+               description: '',
+               required: true,
+           }
+           #swagger.parameters['data'] = {
+               in: 'body',
+               description: '',
+               required: true,
+           }
+
+           #swagger.parameters['Token'] = {
+                name: 'Token',
+                in: 'header',
+                description: 'JWT token',
+                required: true
+           }
+
+           #swagger.responses[200] = {
+               description: '',
+           }
+           #swagger.responses[400] = {
+               description: '',
+           }
+
+           #swagger.responses[408] = {
+               description: 'Request Timeout',
+           }
+    */
     try {
         const itemId = req.params.id;
         const data = req.body;
@@ -72,7 +128,34 @@ exports.updateItem = async (req, res) => {
     }
 }
 
-exports.deleteItem = async (req, res) => { 
+exports.deleteItem = async (req, res) => {
+    /* 
+         #swagger.tags = ['Items']
+         #swagger.description = ''
+         #swagger.summary = ''
+         #swagger.parameters['id'] = {
+             description: '',
+             required: true,
+         }
+
+         #swagger.parameters['Token'] = {
+             name: 'Token',
+             in: 'header',
+             description: 'JWT token',
+             required: true
+        }
+
+         #swagger.responses[200] = {
+             description: 'Item successfully deleted',
+         }
+         #swagger.responses[400] = {
+             description: '',
+         }
+
+         #swagger.responses[408] = {
+             description: 'Request Timeout',
+         }
+    */
     try {
         const itemId = req.params.id;
         await db.collection('items').doc(itemId).delete();
@@ -83,23 +166,33 @@ exports.deleteItem = async (req, res) => {
 }
 
 exports.getAllItems = async (req, res) => {
-  /* 
-     #swagger.tags = ['Items']
-     #swagger.description = 'Get all items entries'
-     #swagger.summary = 'Get all items entries'
-     #swagger.responses[200] = {
-         description: 'Items entries successfully obtained',
-     }
-     #swagger.responses[400] = {
-         description: 'Bad request',
-     }
-  */
-  try {
-    const itemsSnapshot = await db.collection('items').get();
-    const items = [];
-    itemsSnapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
-    res.status(200).json(items);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
+    /* 
+       #swagger.tags = ['Items']
+       #swagger.description = 'Get all items entries'
+       #swagger.summary = 'Get all items entries'
+       #swagger.parameters['Token'] = {
+         name: 'Token',
+         in: 'header',
+         description: 'JWT token',
+         required: true
+      }
+       #swagger.responses[200] = {
+           description: 'Items entries successfully obtained',
+       }
+       #swagger.responses[400] = {
+           description: 'Bad request',
+       }
+
+       #swagger.responses[408] = {
+           description: 'Request Timeout',
+       }
+    */
+    try {
+        const itemsSnapshot = await db.collection('items').get();
+        const items = [];
+        itemsSnapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
+        res.status(200).json(items);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
 };

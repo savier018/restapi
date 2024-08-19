@@ -33,7 +33,8 @@
             "name": "Token",
             "in": "header",
             "description": "JWT token",
-            "required": true
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -59,7 +60,8 @@
             "name": "Token",
             "in": "header",
             "description": "JWT token",
-            "required": true
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -94,7 +96,8 @@
             "name": "Token",
             "in": "header",
             "description": "JWT token",
-            "required": true
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -113,19 +116,35 @@
         }
       },
       "put": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
           },
           {
             "name": "Token",
             "in": "header",
             "description": "JWT token",
-            "required": true
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -141,24 +160,30 @@
         }
       },
       "delete": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": ""
           },
           {
             "name": "Token",
             "in": "header",
             "description": "JWT token",
-            "required": true
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Item successfully deleted"
           },
           "400": {
             "description": "Bad Request"
